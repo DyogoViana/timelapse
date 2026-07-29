@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chronos — Timelapse & GIF Generator</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="app">
+  <!-- Header -->
+  <header class="header">
+    <div class="brand">
+      <div class="brand-icon">⏱</div>
+      Chronos <span>v1.3.0</span>
+    </div>
+    <div class="header-actions">
+      <div class="api-status checking" id="apiStatus">
+        <span class="api-status-dot"></span>
+        <span id="apiStatusText">Verificando API...</span>
+      </div>
+      <button class="btn-icon" id="themeToggle" title="Alternar tema">🌙</button>
+    </div>
+  </header>
+
+  <!-- Main -->
+  <div class="main">
+    <!-- Left Panel: Upload & Config -->
+    <div class="panel">
+      <div class="panel-header">
+        <span class="panel-title">Importar Relatório</span>
+      </div>
+      <div class="panel-body">
+        <div class="upload-zone" id="uploadZone">
+          <input type="file" id="fileInput" accept=".csv,.xlsx,.json">
+          <div class="upload-icon">📁</div>
+          <h3>Solte o relatório aqui</h3>
+          <p>ou clique para selecionar</p>
+          <div class="file-types">
+            <span class="file-tag">CSV</span>
+            <span class="file-tag">XLSX</span>
+            <span class="file-tag">JSON</span>
+          </div>
+        </div>
+
+        <div class="field" style="margin-top: var(--space-5);">
+          <label>Pasta Base (opcional)</label>
+          <input type="text" id="baseFolder" placeholder="C:/capturas">
+        </div>
+
+        <button class="btn btn-primary" style="width: 100%; margin-top: var(--space-2);" id="uploadBtn" disabled>
+          <span class="spinner" style="display: none;" id="uploadSpinner"></span>
+          <span id="uploadBtnText">Importar Sessões</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Center Panel: Sessions -->
+    <div class="panel">
+      <div class="panel-header">
+        <span class="panel-title">Sessões</span>
+        <span class="selection-badge" id="selectionCount" style="display: none;">0</span>
+      </div>
+      <div class="toolbar">
+        <button class="btn btn-secondary btn-sm" id="selectAllBtn">
+          Selecionar Todos
+        </button>
+        <button class="btn btn-primary btn-sm" id="batchTimelapseBtn" disabled>
+          ▶ Timelapse
+        </button>
+        <button class="btn btn-primary btn-sm" id="batchGifBtn" disabled>
+          🎞 GIF
+        </button>
+        <button class="btn btn-danger btn-sm" id="deleteProjectBtn" disabled>
+          🗑 Remover
+        </button>
+      </div>
+      <div class="panel-body" style="padding: 0;">
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th style="width: 40px;"></th>
+                <th>Data</th>
+                <th>Início</th>
+                <th>Fim</th>
+                <th>Capturas</th>
+                <th style="width: 120px;">Ações</th>
+              </tr>
+            </thead>
+            <tbody id="sessionsTable">
+              <tr>
+                <td colspan="6">
+                  <div class="empty-state">
+                    <div class="empty-state-icon">📂</div>
+                    <p>Nenhuma sessão importada</p>
+                    <p style="font-size: var(--text-xs); margin-top: var(--space-2);">Faça upload de um relatório para começar</p>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Panel: Jobs & Results -->
+    <div class="panel">
+      <div class="panel-header">
+        <span class="panel-title">Jobs & Resultados</span>
+      </div>
+      <div class="panel-body">
+        <div class="jobs-list" id="jobsList">
+          <div class="empty-state">
+            <div class="empty-state-icon">⚡</div>
+            <p>Nenhum job em andamento</p>
+            <p style="font-size: var(--text-xs); margin-top: var(--space-2);">Selecione uma sessão e gere um timelapse ou GIF</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Toast Container -->
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- Error Modal -->
+<div class="modal-overlay" id="errorModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2><span class="error-badge">Erro</span> Falha na Operação</h2>
+      <button class="btn-icon" onclick="app.closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <p id="errorMessage">Ocorreu um erro inesperado durante a operação.</p>
+      <div class="stack-trace" id="errorStack"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="app.closeModal()">Fechar</button>
+      <button class="btn btn-primary" id="copyErrorBtn">📋 Copiar para IA</button>
+    </div>
+  </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
